@@ -1,0 +1,10 @@
+.header {
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-direction: row;
+    padding: 24px;
+    justify-content: center;
+    box-shadow: 0px 12px 25px -10px #b2d1e1;
+    box-sizing: border-box;
+} 

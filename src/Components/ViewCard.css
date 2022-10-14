@@ -1,0 +1,50 @@
+.viewCard {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 70%;
+
+    align-items: center;
+    border-radius: 5px;
+    margin: 10px;
+    /* border: 1px solid black; */
+    padding: 5px 10px;
+    box-shadow: 0px 8px 20px -8px #b2d1e198;
+    box-sizing: border-box;
+}
+
+
+.viewCard:hover {
+    box-shadow: 0px 12px 25px -10px #b2d1e1;
+    transform: scale(1.1);
+    transition: 0.3s;
+}
+
+.viewCard__name {
+    font-size: x-large;
+}
+.viewCard__roll {
+    font-size: medium;
+}
+
+
+.viewCard__date {
+    font-size: medium;
+}
+.viewCard__time {
+    font-size: small;
+}
+.viewCard__select {
+    display: flex;
+    align-items: center;
+    border-left: 0.5px solid gray;
+    padding: 15px;
+    padding-left: 25px;
+    
+}
+.viewCard__select > input{
+    
+    height: 30px;
+    width: 30px;
+}
+
