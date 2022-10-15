@@ -28,6 +28,39 @@ const BodyRight = () => {
    
   }, [])
   
+  const check = () => {
+    if (rolls.length < 2) {
+      alert("Participants must be > 2");
+      return false
+    }
+    const start = new Date(date+"T"+sTime+":00Z")
+    const end = new Date(date+"T"+eTime+":00Z")
+    if(start < Date.now()) {
+      alert("Date must be in future")
+      return false
+    }
+
+    if (end < start) {
+      alert ("End must be after start")
+      return false
+    }
+
+
+
+    // const fetchInterviews = async () => {
+    //   const response = db.collection('interviews')
+    //   await response.get().then(data => {
+    //     setInterviews(data.docs.map(item => ({
+    //       date: item.data().date,
+    //       endTime: item.data().endTime,
+    //       rolls: item.data().rolls,
+    //       startTime: item.data().startTime
+    //   })))
+    //   })
+    // }
+    // fetchInterviews()
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     
@@ -40,6 +73,9 @@ const BodyRight = () => {
       "startTime": sTime,
       "endTime": eTime,
       "date": date
+    }
+    if (check() == false) {
+      return 
     }
     db.collection("interviews").add(data)
     .then(() => {

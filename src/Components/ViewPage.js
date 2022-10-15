@@ -5,7 +5,7 @@ import { db } from '..'
 
 const ViewPage = () => {
   const [interviews, setInterviews] = useState([])
-  const [names, setNames] = useState([])
+  const [names, setNames] = useState([]) // ns = [[n1,n2], [n3,n4,n5]] 
   const [newIntv, setNewIntv] = useState([])
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ViewPage = () => {
             r.push({"name": name, "roll": roll})
           })
         })
-        ns.push(r)
+        ns.push(r) //
       })
      setNames(ns)
     }
