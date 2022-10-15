@@ -1,9 +1,13 @@
 .viewCard {
     display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+.viewCard__card {
+    display: flex;
     flex-direction: row;
     justify-content: space-between;
     width: 70%;
-
     align-items: center;
     border-radius: 5px;
     margin: 10px;
@@ -14,12 +18,19 @@
 }
 
 
-.viewCard:hover {
+.viewCard__card:hover {
     box-shadow: 0px 12px 25px -10px #b2d1e1;
     transform: scale(1.1);
     transition: 0.3s;
 }
 
+.viewCard__info-date {
+    display: flex;
+}
+.viewCard__innerDate {
+    display: grid;
+    margin-right: 20px;
+}
 .viewCard__name {
     font-size: x-large;
 }
@@ -47,4 +58,5 @@
     height: 30px;
     width: 30px;
 }
+
 

@@ -8,11 +8,14 @@ const ViewPage = () => {
   const [names, setNames] = useState([]) // ns = [[n1,n2], [n3,n4,n5]] 
   const [newIntv, setNewIntv] = useState([])
 
+  const getNewIntv = () => newIntv
+
   useEffect(() => {
     const fetchInterviews = async () => {
       const response = db.collection('interviews')
       await response.get().then(data => {
         setInterviews(data.docs.map(item => ({
+          id: item.id,
           date: item.data().date,
           endTime: item.data().endTime,
           rolls: item.data().rolls,
@@ -25,8 +28,7 @@ const ViewPage = () => {
 
   useEffect(() => {
     const fetchName = async (roll) => {
-      const response = db.collection('students').doc(roll)
-      const d = await response.get()
+      const d = await db.collection('students').doc(roll).get()
       return d.data().name
     } 
     if (interviews) {
@@ -60,7 +62,7 @@ const ViewPage = () => {
   return (
     <div className='viewPage'>
       {newIntv && newIntv.map(interview => 
-        <ViewCard students={interview.students} stime={interview.startTime} etime={interview.endTime} date={interview.date}/>
+        <ViewCard getNI={getNewIntv} setNI={setNewIntv} id={interview.id} students={interview.students} stime={interview.startTime} etime={interview.endTime} date={interview.date}/>
       )}
     </div>
   )
