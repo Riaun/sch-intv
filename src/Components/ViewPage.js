@@ -5,46 +5,62 @@ import { db } from '..'
 
 const ViewPage = () => {
   const [interviews, setInterviews] = useState([])
+  const [names, setNames] = useState([])
+  const [newIntv, setNewIntv] = useState([])
 
   useEffect(() => {
-    var interviews = []
-    var newIntvs = []
+    const fetchInterviews = async () => {
+      const response = db.collection('interviews')
+      await response.get().then(data => {
+        setInterviews(data.docs.map(item => ({
+          date: item.data().date,
+          endTime: item.data().endTime,
+          rolls: item.data().rolls,
+          startTime: item.data().startTime
+      })))
+      })
+    }
+   fetchInterviews()
+  }, [])
 
+  useEffect(() => {
     const fetchName = async (roll) => {
       const response = db.collection('students').doc(roll)
       const d = await response.get()
       return d.data().name
     } 
-
-
-    const fetchInterviews = async () => {
-      const response = db.collection('interviews')
-      await response.get().then(data => {
-        data.docs.forEach(interview => {
-          interviews.push(interview.data())
-        })
-        interviews.forEach(interview => {
-          interview.students = []
-          interview.rolls.forEach(roll => {
-            const n = fetchName(roll)
-            n.then(name => {
-              interview.students.push({"name": name, "roll": roll})
-            })
+    if (interviews) {
+      var ns = []
+      interviews.forEach(interview => {
+        var r = []
+        interview.rolls.forEach(roll => {
+          const n = fetchName(roll)
+          n.then(name => {
+            r.push({"name": name, "roll": roll})
           })
-          newIntvs.push(interview)
         })
-       setInterviews(newIntvs)
-        
+        ns.push(r)
       })
-      
+     setNames(ns)
     }
-   fetchInterviews()
-  }, [])
+  }, [interviews])
+
+  useEffect(() => {
+    if (interviews && names) {
+      var ni = []
+      for (let index = 0; index < interviews.length; index++) {
+        var obj = interviews[index]
+        obj.students = names[index]
+        ni.push(obj)
+      }
+      setNewIntv(ni)
+    }
+  }, [names])
   
   return (
     <div className='viewPage'>
-      {interviews.map(interview => 
-        <ViewCard students={interview.students} stime={interview.startTime}etime={interview.endTime} date={interview.date}/>
+      {newIntv && newIntv.map(interview => 
+        <ViewCard students={interview.students} stime={interview.startTime} etime={interview.endTime} date={interview.date}/>
       )}
     </div>
   )

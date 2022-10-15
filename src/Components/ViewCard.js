@@ -6,13 +6,16 @@ const ViewCard = (props) => {
 
   return (
     <div className='viewCard'>
-      {console.log(props.students)}
       {
-        props.students.map(student =>   
+        props.students.map(student =>   {
+          console.log(student.name)
+          return(
+           
         <div className='viewCard__info'>
           <h3 className='viewCard__name'>{student.name}</h3>
           <h3 className='viewCard__roll'>Roll: {student.roll} </h3>
-        </div>
+        </div>)
+        }
         )
       }
       <div className='viewCard__info'>
