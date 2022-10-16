@@ -11,7 +11,15 @@ const BodyRight = () => {
   const [eTime, setETime] = useState()
   const [date, setDate] = useState()
   const [students, setStudents] = useState([])
+  const [intvs, setIntvs] = useState([])
  
+
+  const fetchInterviews = async () => {
+    const response = db.collection('interviews')
+    await response.get().then(data => {
+      setIntvs(data.docs.map(i => i.data()))
+    })
+  }
 
   useEffect(() => {
     const fetchStudents = async () => {
@@ -22,15 +30,32 @@ const BodyRight = () => {
           roll: item.data().roll
       })))
       })
-      
     }
+
    fetchStudents()
+   fetchInterviews()
    
   }, [])
   
   const check = () => {
     if (rolls.length < 2) {
       alert("Participants must be > 2");
+      return false
+    }
+    if (rolls.length > 5) {
+      alert("Participants must be < 5");
+      return false
+    }
+    if (!sTime) {
+      alert("Start time is required")
+      return false
+    }
+    if (!eTime) {
+      alert("End Time is required")
+      return false
+    }
+    if (!date) {
+      alert("Date is required")
       return false
     }
     const start = new Date(date+"T"+sTime+":00Z")
@@ -46,19 +71,29 @@ const BodyRight = () => {
     }
 
 
-
-    // const fetchInterviews = async () => {
-    //   const response = db.collection('interviews')
-    //   await response.get().then(data => {
-    //     setInterviews(data.docs.map(item => ({
-    //       date: item.data().date,
-    //       endTime: item.data().endTime,
-    //       rolls: item.data().rolls,
-    //       startTime: item.data().startTime
-    //   })))
-    //   })
-    // }
-    // fetchInterviews()
+    const isAvailable = () => {
+      var available = true
+      for (let index = 0; index < rolls.length; index++) {
+        const roll = rolls[index];
+        console.log(intvs)
+        intvs.forEach(intv => {
+          intv.rolls.forEach(r => {
+            if (roll === r) {
+              console.log("ISAVA: " + roll + ":" + r)
+              const intvSDate = new Date(intv.date + "T" + intv.startTime + ":00Z")
+              const intvEDate = new Date(intv.date + "T" + intv.endTime + ":00Z")
+              if ((start < intvEDate && start > intvSDate) || (end < intvEDate && end > intvSDate)) {
+                available = false
+                alert("Student with Roll No. " + roll + "is not available during selected time period")
+              }
+            }
+          })  
+        })
+      }
+      
+      return available
+    }
+    return isAvailable()
   }
 
   const handleSubmit = (e) => {
@@ -74,7 +109,7 @@ const BodyRight = () => {
       "endTime": eTime,
       "date": date
     }
-    if (check() == false) {
+    if (check() === false) {
       return 
     }
     db.collection("interviews").add(data)
@@ -84,6 +119,7 @@ const BodyRight = () => {
     .catch((e) => {
       alert("Error scheduling interview: " + e)
     })
+    setIntvs([...intvs, data])
   }
   const getRolls = () => {
     return rolls
@@ -102,14 +138,8 @@ const BodyRight = () => {
     <div className ='bodyRight'>
       
      
-       {    students.map(student =><BodyCard name={student.name}
-            roll={student.roll}
-            setRolls={setRolls}
-            getRolls={getRolls} />)}
-    
-      
-        
-    
+       {  students ? students.map(student =><BodyCard name={student.name} roll={student.roll} setRolls={setRolls} getRolls={getRolls} />): <p>No Students Found</p> }
+
         Select Date:
         <input className='bodyRight__date' type='date' onChange={updateDate}/>
         

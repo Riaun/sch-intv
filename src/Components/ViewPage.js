@@ -8,7 +8,21 @@ const ViewPage = () => {
   const [names, setNames] = useState([]) // ns = [[n1,n2], [n3,n4,n5]] 
   const [newIntv, setNewIntv] = useState([])
 
-  const getNewIntv = () => newIntv
+  const deleteItem = (id) => {
+    console.log("delete func called...")
+    setNewIntv(newIntv.filter(intv => intv.id !== id))
+    console.log("new intvs: " + newIntv)
+  }
+  const updateItem = (obj, id) => {
+    setNewIntv(newIntv.map(intv => {
+      if (intv.id === id) {
+        intv.startTime = obj.startTime
+        intv.endTime = obj.endTime
+        intv.date = obj.date
+      }
+      return intv
+    }))
+  }
 
   useEffect(() => {
     const fetchInterviews = async () => {
@@ -61,9 +75,7 @@ const ViewPage = () => {
   
   return (
     <div className='viewPage'>
-      {newIntv && newIntv.map(interview => 
-        <ViewCard getNI={getNewIntv} setNI={setNewIntv} id={interview.id} students={interview.students} stime={interview.startTime} etime={interview.endTime} date={interview.date}/>
-      )}
+      {newIntv ? newIntv.map(interview => <ViewCard deleteIntv={deleteItem} updateItem={updateItem} id={interview.id} students={interview.students} stime={interview.startTime} etime={interview.endTime} date={interview.date}/>) : <p>No Interviews Found</p> }
     </div>
   )
 }

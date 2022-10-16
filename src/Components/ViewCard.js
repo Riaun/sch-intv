@@ -16,6 +16,7 @@ const ViewCard = (props) => {
     setTimeout(() => {
       setStuds(props.students)
     }, 400);
+    
   }, [])
   
   return (
@@ -42,7 +43,7 @@ const ViewCard = (props) => {
           </div>
         </div>
       </div>
-      {isEdit && <EditCard getNI={props.getNI} setNI={props.setNI} id={props.id} students={studs}/>}
+      {isEdit && <EditCard updateItem={props.updateItem} deleteIntv={props.deleteIntv} id={props.id} students={studs}/>}
     </div>
   )
 }
